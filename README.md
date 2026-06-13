@@ -1,143 +1,138 @@
-<![CDATA[# 🚦 TraffciGuard — Urban Traffic Demand Prediction
+# TraffciGuard — Urban Traffic Demand Prediction
 
-> **Predicting real-time traffic demand across 1,000+ geohash-encoded urban zones using advanced spatiotemporal feature engineering and gradient-boosted ensemble models.**
+**Predicting real-time traffic demand across 1,000+ geohash-encoded urban zones using advanced spatiotemporal feature engineering and gradient-boosted ensemble models.**
 
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://python.org)
-[![LightGBM](https://img.shields.io/badge/LightGBM-4.x-9ACD32)](https://lightgbm.readthedocs.io/)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.x-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
-[![R² Score](https://img.shields.io/badge/R²_Score-0.964-brightgreen)](.)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)
+![LightGBM](https://img.shields.io/badge/LightGBM-4.x-9ACD32)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-1.x-F7931E?logo=scikit-learn&logoColor=white)
+![R2 Score](https://img.shields.io/badge/R2_Score-0.964-brightgreen)
 
 ---
 
-## 📋 Problem Statement
+## Problem Statement
 
-Given historical traffic data across urban locations encoded as geohashes, the goal is to predict the **demand** (traffic intensity, normalized 0–1) for unseen time periods and locations. The dataset captures spatiotemporal demand patterns influenced by road infrastructure, weather, and geographic features.
+Given historical traffic data across urban locations encoded as geohashes, the goal is to predict the **demand** (traffic intensity, normalized 0-1) for unseen time periods and locations. The dataset captures spatiotemporal demand patterns influenced by road infrastructure, weather, and geographic features.
 
 ### Key Challenges
+
 - **Spatiotemporal distribution shift** — training data covers different time regimes than the test set
-- **Sparse geohash coverage** — not all location × time combinations are observed
+- **Sparse geohash coverage** — not all location x time combinations are observed
 - **Missing features** — temperature and weather data have significant gaps
 - **High cardinality** — 1,000+ unique geohash locations with temporal granularity at 15-minute intervals
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                    Raw Data (77K rows)                        │
-│  geohash · timestamp · demand · RoadType · Lanes · Weather   │
-└────────────────────────┬─────────────────────────────────────┘
-                         ▼
-┌──────────────────────────────────────────────────────────────┐
-│              Feature Engineering (25+ features)               │
-│                                                               │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────────────────┐ │
-│  │  Geospatial  │  │   Temporal    │  │   Target Encoding    │ │
-│  │  - lat/lon   │  │  - slot/hour  │  │  - Bayesian smooth   │ │
-│  │  - gh3/4/5   │  │  - sin/cos    │  │  - Multi-resolution  │ │
-│  │  - KNN(k=8)  │  │  - lag ±1,±2  │  │  - OOF leak-proof   │ │
-│  └─────────────┘  └──────────────┘  └──────────────────────┘ │
-│                                                               │
-│  ┌─────────────────────────────────────────────────────────┐  │
-│  │  Matrix Factorization (SVD latent factors, rank=12)      │  │
-│  │  Location × TimeSlot → 6 latent dims + reconstruction    │  │
-│  └─────────────────────────────────────────────────────────┘  │
-└────────────────────────┬─────────────────────────────────────┘
-                         ▼
-┌──────────────────────────────────────────────────────────────┐
-│                  Multi-Model Ensemble                         │
-│                                                               │
-│  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐ │
-│  │ LightGBM  │  │ LightGBM  │  │  XGBoost  │  │ CatBoost  │ │
-│  │  (L2)     │  │  (Huber)  │  │           │  │           │ │
-│  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘ │
-│        └───────────────┴──────────────┴───────────────┘       │
-│                         ▼                                     │
-│  ┌─────────────────────────────────────────────────────────┐  │
-│  │  Multi-Seed (3×) 5-Fold CV + Optimized Weighted Blend   │  │
-│  └─────────────────────────────────────────────────────────┘  │
-└────────────────────────┬─────────────────────────────────────┘
-                         ▼
-                   R² = 0.964
+```mermaid
+flowchart TD
+    A["Raw Data (77K rows)<br/>geohash - timestamp - demand - RoadType - Lanes - Weather"] --> B["Feature Engineering (25+ features)"]
+    
+    B --> C["Geospatial<br/>- lat/lon decoding<br/>- gh3/4/5 prefixes<br/>- KNN (k=8)"]
+    B --> D["Temporal<br/>- slot/hour<br/>- sin/cos encoding<br/>- lag +/-1, +/-2"]
+    B --> E["Target Encoding<br/>- Bayesian smoothing<br/>- Multi-resolution<br/>- OOF leak-proof"]
+    B --> F["Matrix Factorization<br/>SVD (rank=12)<br/>6 latent dims + reconstruction"]
+    
+    C --> G["Multi-Model Ensemble"]
+    D --> G
+    E --> G
+    F --> G
+    
+    G --> H["LightGBM (L2)"]
+    G --> I["LightGBM (Huber)"]
+    G --> J["XGBoost"]
+    G --> K["CatBoost"]
+    
+    H --> L["Multi-Seed 3x - 5-Fold CV<br/>Optimized Weighted Blend"]
+    I --> L
+    J --> L
+    K --> L
+    
+    L --> M["R2 = 0.964"]
 ```
 
 ---
 
-## 🔬 Feature Engineering
+## Feature Engineering
 
 ### Geospatial Features
+
 | Feature | Description |
 |---------|-------------|
-| `lat`, `lon` | Decoded from geohash (Base32 → coordinates) |
+| `lat`, `lon` | Decoded from geohash (Base32 to coordinates) |
 | `gh3`, `gh4`, `gh5` | Hierarchical geohash prefixes for multi-resolution encoding |
 | `sp_knn` | Mean demand of 8 nearest spatial neighbors (KNN on lat/lon) |
 
 ### Temporal Features
+
 | Feature | Description |
 |---------|-------------|
-| `slot` | 15-minute time slot index (0–95 per day) |
+| `slot` | 15-minute time slot index (0-95 per day) |
 | `t_sin`, `t_cos` | Cyclical encoding of time-of-day |
-| `lag_prev/next` | Demand from adjacent time slots (±1, ±2) |
+| `lag_prev/next` | Demand from adjacent time slots (+/-1, +/-2) |
 | `roll3` | Rolling mean across 3 temporal neighbors |
 
 ### Target Encoding (Bayesian Smoothing)
+
 | Feature | Grouping Keys | Smoothing (m) |
 |---------|--------------|---------------|
-| `te_gh_ts` | geohash × timestamp | 1.0 |
-| `te_gh5_ts` | gh5 × timestamp | 2.0 |
-| `te_gh4_ts` | gh4 × timestamp | 3.0 |
+| `te_gh_ts` | geohash x timestamp | 1.0 |
+| `te_gh5_ts` | gh5 x timestamp | 2.0 |
+| `te_gh4_ts` | gh4 x timestamp | 3.0 |
 | `te_gh` | geohash | 3.0 |
 | `te_ts` | timestamp | 5.0 |
-| `te_gh_hour` | geohash × hour | 1.0 |
-| `te_road_ts` | RoadType × slot | 5.0 |
+| `te_gh_hour` | geohash x hour | 1.0 |
+| `te_road_ts` | RoadType x slot | 5.0 |
 
 All target encodings use **out-of-fold (OOF) computation** within 5-fold CV to prevent data leakage.
 
 ### Latent Factors (SVD)
-- Constructed a **Location × TimeSlot** pivot matrix from training data
+
+- Constructed a **Location x TimeSlot** pivot matrix from training data
 - Applied **TruncatedSVD (rank=12)** to extract latent demand patterns
 - Used top 6 latent dimensions as features + full reconstruction as baseline signal
 
 ---
 
-## 🧠 Models & Ensembling Strategy
+## Models and Ensembling Strategy
 
 ### Base Models
 
 | Model | Loss | Key Hyperparameters |
 |-------|------|-------------------|
 | LightGBM | L2 (MSE) | 4000 trees, lr=0.02, 127 leaves, early stopping |
-| LightGBM | Huber (α=0.9) | 1200 trees, lr=0.03, 63 leaves |
+| LightGBM | Huber (a=0.9) | 1200 trees, lr=0.03, 63 leaves |
 | XGBoost | Squared Error | Tuned depth, colsample, subsample |
 | CatBoost | RMSE | Auto categorical handling |
 | HistGBR | Squared Error | 600 iterations, lr=0.03, 63 leaf nodes |
 
 ### Ensemble Architecture
+
 1. **Multi-seed averaging** — each model trained with 3 different random seeds (42, 7, 2024) to reduce variance
 2. **5-fold cross-validation** — stratified OOF predictions for reliable local validation
 3. **Weighted blending** — optimized blend weights via grid search on held-out validation set
 4. **Multi-engine blending** — combined anchor model (full-data OOF TE), day-specific engine, structural model, and residual model
 
 ### Validation Strategy
-- **Proxy A (Cross-day):** Train on day 48 → predict day 49 (tests temporal generalization)
-- **Proxy B (Daytime split):** Hold out half of day 48 daytime → predict it (tests spatial generalization)
-- **OOF R² tracking** across all ensemble configurations
+
+- **Proxy A (Cross-day):** Train on day 48 then predict day 49 (tests temporal generalization)
+- **Proxy B (Daytime split):** Hold out half of day 48 daytime then predict it (tests spatial generalization)
+- **OOF R2 tracking** across all ensemble configurations
 
 ---
 
-## 📊 Results
+## Results
 
-| Model / Ensemble | OOF R² | Notes |
+| Model / Ensemble | OOF R2 | Notes |
 |------------------|--------|-------|
 | Single LightGBM (L2) | 0.951 | Baseline with basic TE |
 | + Temporal neighbors | 0.958 | Added lag/lead features |
 | + Spatial KNN + SVD | 0.961 | Geospatial latent factors |
-| Multi-seed 3× ensemble | **0.964** | Final submission |
+| Multi-seed 3x ensemble | **0.964** | Final submission |
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 traffciguard/
@@ -157,32 +152,33 @@ traffciguard/
 ├── adv.py                     # Advanced feature experiments
 ├── gen.py                     # Generalization-focused model
 │
-├── submission_best.csv        # Best submission (R² = 0.964)
-├── submission_*.csv           # 90+ ensemble variants explored
-│
 └── README.md
 ```
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
+
 ```bash
 pip install numpy pandas scikit-learn lightgbm xgboost catboost
 ```
 
 ### Run Best Model
+
 ```bash
 python best.py
 ```
+
 This will:
 1. Load and preprocess the dataset
 2. Engineer 25+ spatiotemporal features
 3. Train a multi-seed LightGBM ensemble with 5-fold CV
-4. Output OOF R² score and generate `submission_best.csv`
+4. Output OOF R2 score and generate `submission_best.csv`
 
 ### Run Full Ensemble Pipeline
+
 ```bash
 python ens.py          # Multi-model ensemble
 python optimize.py     # Optimize blend weights
@@ -191,7 +187,7 @@ python structural.py   # Structural model + final blend
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Python 3.10+**
 - **LightGBM** — Primary gradient boosting framework
@@ -201,9 +197,9 @@ python structural.py   # Structural model + final blend
 
 ---
 
-## 📚 Key Techniques Used
+## Key Techniques Used
 
-- Geohash decoding (Base32 → latitude/longitude)
+- Geohash decoding (Base32 to latitude/longitude)
 - Bayesian target encoding with smoothing priors
 - Out-of-fold encoding to prevent leakage
 - TruncatedSVD for matrix factorization on spatiotemporal data
@@ -215,13 +211,12 @@ python structural.py   # Structural model + final blend
 
 ---
 
-## 👤 Author
+## Author
 
 **Ashwin Goyal**
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-]]>
