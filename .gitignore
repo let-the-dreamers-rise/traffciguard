@@ -1,0 +1,21 @@
+<![CDATA[# Data files
+dataset/
+
+# Submission CSVs (too many to track)
+submission_*.csv
+
+# Python cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# CatBoost training artifacts
+catboost_info/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# NVIDIA artifacts
+NVIDIA/
+]]>
