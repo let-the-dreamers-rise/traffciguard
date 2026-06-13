@@ -1,0 +1,163 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[left=0.6in,right=0.6in,top=0.5in,bottom=0.5in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{fontawesome5}
+\usepackage{xcolor}
+
+% ---------- COLORS ----------
+\definecolor{linkblue}{HTML}{0366D6}
+\definecolor{rulecolor}{HTML}{2C3E50}
+
+\hypersetup{
+    colorlinks=true,
+    urlcolor=linkblue,
+    linkcolor=linkblue,
+}
+
+% ---------- SECTION FORMATTING ----------
+\titleformat{\section}{\large\bfseries\color{rulecolor}}{}{0em}{}[\vspace{-4pt}\textcolor{rulecolor}{\titlerule}\vspace{-2pt}]
+\titlespacing*{\section}{0pt}{8pt}{4pt}
+
+% ---------- LIST SETTINGS ----------
+\setlist[itemize]{leftmargin=0.15in, itemsep=1pt, parsep=0pt, topsep=2pt}
+
+% ---------- REMOVE PAGE NUMBER ----------
+\pagenumbering{gobble}
+
+\begin{document}
+
+% ==================== HEADER ====================
+\begin{center}
+    {\Huge \textbf{Ashwin Goyal}} \\[6pt]
+    \faMapMarker*\ Navi Mumbai, India \quad $|$ \quad
+    \faPhone*\ +91 8097251640 \\[3pt]
+    \faEnvelope\ \href{mailto:letthedreamersrise@gmail.com}{letthedreamersrise@gmail.com} \quad $|$ \quad
+    \faGithub\ \href{https://github.com/let-the-dreamers-rise/}{GitHub} \quad $|$ \quad
+    \faGlobe\ \href{https://resumeashwin.vercel.app/}{Portfolio} \quad $|$ \quad
+    \faLinkedin\ \href{https://www.linkedin.com/in/ashwin-goyal-8940a8327/}{LinkedIn}
+\end{center}
+
+% ==================== SUMMARY ====================
+\section{Professional Summary}
+High-velocity Computer Science undergraduate at \textbf{VIT Bhopal} (CGPA: \textbf{8.94/10}) with deep focus on \textbf{Machine Learning, Applied AI, and Scalable Systems}. Shipped \textbf{45+ production-grade projects} and competed in \textbf{45+ international hackathons}, consistently delivering ML-powered and distributed system prototypes under extreme time constraints. Passionate about deploying intelligent systems at scale --- from AI-driven risk engines to real-time decision frameworks. 
+% ==================== EDUCATION ====================
+\section{Education}
+\textbf{Vellore Institute of Technology (VIT), Bhopal} \hfill \textbf{2024 -- 2028} \\
+B.Tech in Computer Science and Engineering \hfill \textbf{CGPA: 8.94 / 10.0} \\[2pt]
+\textit{Relevant Coursework:} Data Structures \& Algorithms, Linear Algebra, Probability \& Statistics, Discrete Mathematics, Database Systems, Computer Networks, Operating Systems
+
+% ==================== CERTIFICATIONS ====================
+\section{Certifications}
+\begin{itemize}
+    \item \textbf{NPTEL --- Cloud Computing} \hfill \textit{Silver Medal} \\
+    Mastered cloud architecture, virtualization, distributed storage, and containerized deployment paradigms.
+    \item \textbf{NPTEL --- Marketing Analytics} \hfill \textit{Gold Medal} \\
+    Applied statistical modeling, regression analysis, and data-driven decision-making to real-world marketing datasets.
+\end{itemize}
+
+% ==================== TECHNICAL SKILLS ====================
+\section{Technical Skills}
+\begin{itemize}
+    \item \textbf{Languages:} Python, C++, Java, JavaScript, TypeScript, SQL
+    \item \textbf{ML / AI:} Scikit-learn, LightGBM, XGBoost, CatBoost, PyTorch, Pandas, NumPy, Feature Engineering, Model Evaluation, Ensemble Methods, Statistical Modeling
+    \item \textbf{Backend \& Systems:} FastAPI, Node.js, REST APIs, WebSockets, Redis, PostgreSQL, Nginx
+    \item \textbf{Frontend:} React.js, Next.js, Tailwind CSS
+    \item \textbf{Cloud \& DevOps:} AWS, Docker, CI/CD, Linux, GitHub Actions, Vultr
+    \item \textbf{Core Strengths:} System Design, Scalable Architecture, Rapid Prototyping, Problem Solving
+\end{itemize}
+
+% ==================== SELECTED PROJECTS ====================
+\section{Selected Projects \textnormal{\textit{(from 60+ shipped systems)}}}
+
+\textbf{\href{https://github.com/let-the-dreamers-rise/traffciguard}{TraffciGuard --- Urban Traffic Demand Prediction} \textnormal{(R\textsuperscript{2} = 0.964)}} \hfill \textit{Jun 2026} \\
+\textit{Spatiotemporal ML Pipeline with Gradient-Boosted Ensemble Models}
+\begin{itemize}
+    \item \textbf{Built} an end-to-end demand prediction pipeline achieving \textbf{R\textsuperscript{2} = 0.964} across 1,000+ geohash-encoded urban zones using \textbf{LightGBM, XGBoost, and CatBoost}.
+    \item \textbf{Engineered 25+ features} including Bayesian-smoothed target encoding at multiple spatial resolutions, cyclical time encoding, spatial KNN averaging (k=8), and \textbf{TruncatedSVD} latent factors from a Location$\times$TimeSlot matrix.
+    \item \textbf{Designed} a leak-proof out-of-fold (OOF) target encoding pipeline within 5-fold cross-validation to prevent data leakage across 77K training samples.
+    \item \textbf{Implemented} multi-seed (3$\times$) ensemble averaging with early stopping and optimized weighted blending across model families, iterating through \textbf{90+ submission variants}.
+\end{itemize}
+
+\vspace{4pt}
+
+\textbf{\href{https://github.com/let-the-dreamers-rise/parcelgaurd}{ParcelGuard --- Package Damage Detection}} \hfill \textit{Jun 2026} \\
+\textit{Multi-Task Deep Learning for Computer Vision}
+\begin{itemize}
+    \item \textbf{Developed} a multi-task CNN in \textbf{PyTorch} that simultaneously classifies package damage type (pristine, dented, torn, wet, crushed) and generates pixel-level segmentation masks for damage localization.
+    \item \textbf{Built} a synthetic data generation pipeline producing balanced, labeled datasets with corresponding damage masks for training and evaluation.
+    \item \textbf{Evaluated} model performance using accuracy, macro-F1, confusion matrices, and IoU metrics, with inference overlays for \textbf{explainability}.
+    \item \textbf{Deployed} a \textbf{FastAPI} inference endpoint enabling real-time damage classification and segmentation on uploaded package images.
+\end{itemize}
+
+\vspace{4pt}
+
+\textbf{\href{https://github.com/let-the-dreamers-rise/tinyfish-bidpilot}{BidPilot --- AI Procurement Automation Platform}} \hfill \textit{May 2026} \\
+\textit{Agentic Supplier Portal Automation for Enterprise Procurement}
+\begin{itemize}
+    \item \textbf{Built} an AI-powered procurement platform that automates supplier onboarding workflows, reducing manual portal entry across systems such as Ariba, Coupa, and Jaggaer.
+    \item \textbf{Integrated} TinyFish Search, Fetch, Browser, and Agent APIs to autonomously navigate portals, populate forms, upload compliance documents, and save review-ready drafts.
+    \item \textbf{Engineered} a secure full-stack architecture using \textbf{Next.js, Supabase, PostgreSQL, and Razorpay} with encrypted document storage, audit logging, and human-in-the-loop approval controls.
+    \item \textbf{Developed} reusable vendor packet infrastructure enabling organizations to standardize onboarding data and scale procurement operations efficiently.
+\end{itemize}
+
+\vspace{4pt}
+
+\textbf{\href{https://github.com/let-the-dreamers-rise/aura-decision-firewall}{AURA --- AI Decision Firewall (Mantle L2)}} \hfill \textit{Jan 2026} \\
+\textit{ML-Powered Security \& Risk Analysis Engine}
+\begin{itemize}
+    \item \textbf{Architected} an AI-driven security layer that parses raw blockchain transaction data and translates it into \textbf{human-readable intent} using natural language processing techniques.
+    \item \textbf{Engineered} a \textbf{risk assessment engine} employing rule-based classification and anomaly detection to flag unverified contracts, abnormal gas patterns, and high-value transaction threats in \textbf{real time}.
+    \item \textbf{Designed} a decision logging system on \textbf{Mantle L2} using Solidity smart contracts, creating \textbf{verifiable, immutable audit trails} for every AI-generated risk assessment.
+    \item \textbf{Validated} system reliability across \textbf{40+ functional test cases} using Hardhat and Vitest, achieving \textbf{100\% pass rate} on critical security paths.
+\end{itemize}
+% ==================== EXPERIENCE ====================
+\section{Experience}
+
+\textbf{Project Samvardhanam --- Social Impact Initiative} \hfill \textbf{2025 -- Present} \\
+\textit{Co-Founder \& Technical Lead}
+\begin{itemize}
+    \item Co-founded a grassroots initiative addressing \textbf{systemic gaps} in education access and community support across underserved regions.
+    \item \textbf{Built and deployed} a full-stack web platform enabling real-time donations, volunteer onboarding, and transparent impact tracking.
+    \item \textbf{Designed} structured data workflows for user engagement analytics, exploring \textbf{data-driven methods} to optimize outreach in low-resource environments.
+    \item Developing \textbf{scalable coordination systems} for cross-regional outreach and measurable social impact tracking.
+\end{itemize}
+
+\vspace{4pt}
+
+\textbf{Lablab AI Robotics Hackathon} \hfill \textbf{Feb 2026} \\
+\textit{Infrastructure Lead}
+\begin{itemize}
+    \item \textbf{Managed} cloud infrastructure on \textbf{Vultr} for a real-time robotics control system, ensuring low-latency communication between AI models and hardware actuators.
+    \item \textbf{Containerized} microservices using \textbf{Docker}, achieving deployment consistency and enabling rapid horizontal scaling.
+\end{itemize}
+
+% ==================== HACKATHONS & COMPETITIVE RECORD ====================
+\section{Hackathons \& Competitive Record}
+\begin{itemize}
+    \item Competed in \textbf{45+ international hackathons}, consistently shipping functional ML-powered and distributed system prototypes within \textbf{24--48 hour} windows.
+    \item Shipped \textbf{60+ production-grade projects} with emphasis on system design, scalability, performance optimization, and user-centric AI.
+    \item Demonstrated extreme \textbf{rapid prototyping ability} --- consistently ranked among top teams by delivering end-to-end solutions under intense time pressure.
+\end{itemize}
+
+% ==================== AWARDS ====================
+\section{Awards \& Recognition}
+\begin{itemize}
+    \item \textbf{Finalist} --- \textbf{Meta PyTorch Hackathon} \hfill \textit{Global Competition}
+    \item \textbf{Semifinalist} --- \textbf{AWS 10,000 AI Ideas Hackathon} \hfill \textit{Global Competition}
+    \item \textbf{Semifinalist} --- \textbf{Convolve Hackathon} \hfill \textit{National Competition}
+    \item \textbf{Gold } --- NPTEL Marketing Analytics Certification
+    \item \textbf{Silver } --- NPTEL Cloud Computing Certification
+\end{itemize}
+
+% ==================== RESEARCH INTERESTS ====================
+\section{Research Interests}
+\begin{itemize}
+    \item \textbf{Machine Learning \& Deep Learning:} Neural architectures, representation learning, and model optimization at scale
+    \item \textbf{AI for Security:} Intelligent threat detection, anomaly detection, and adversarial robustness
+    \item \textbf{Distributed Systems:} Fault-tolerant and scalable infrastructure for large-scale ML workloads
+\end{itemize}
+
+\end{document}
