@@ -10,6 +10,8 @@
   - [x] Add AURA (AI Decision Firewall on Mantle L2) with GitHub link
 - [x] Update resume technical skills with relevant ML/AI tools (LightGBM, XGBoost, CatBoost, PyTorch, Ensemble Methods)
 - [x] Commit and push the resume to the GitHub repository
+- [x] Create a standard resume (`resume.tex`) containing DreamOS instead of ParcelGuard for general applications
 
 ## Results & Review
 The resume has been successfully restructured to focus on Machine Learning and Applied AI. Real-world projects with links were added to align the resume with the requirements of the Amazon ML Summer School (MLSS). The TraffciGuard README.md was also polished to represent the project beautifully.
+
